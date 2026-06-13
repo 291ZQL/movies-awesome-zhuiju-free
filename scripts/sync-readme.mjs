@@ -78,6 +78,17 @@ function shortSummary(resource) {
   return String(resource.summary_short ?? resource.summary).replace(/[。.!！]$/, "");
 }
 
+function recommendationStars(resource) {
+  const average =
+    (resource.scores.more +
+      resource.scores.speed +
+      resource.scores.clean +
+      resource.scores.stable) /
+    4;
+  const rating = Math.min(5, Math.max(1, Math.round(average)));
+  return "🌟".repeat(rating);
+}
+
 function tableFor(resources, availabilityById) {
   const rows = resources
     .map((resource) => {
@@ -88,10 +99,7 @@ function tableFor(resources, availabilityById) {
       return `    <tr>
       <td><a href="${escapeHtml(resource.url)}">${escapeHtml(resource.name)}</a></td>
       <td>${escapeHtml(shortSummary(resource))}</td>
-      <td align="center">${resource.scores.more.toFixed(1)}</td>
-      <td align="center">${resource.scores.speed.toFixed(1)}</td>
-      <td align="center">${resource.scores.clean.toFixed(1)}</td>
-      <td align="center">${resource.scores.stable.toFixed(1)}</td>
+      <td align="center">${recommendationStars(resource)}</td>
       <td align="center"><!-- availability:${resource.id} -->${status}<!-- /availability:${resource.id} --></td>
       <td align="center"><!-- availability-date:${resource.id} -->${checkedAt}<!-- /availability-date:${resource.id} --></td>
     </tr>`;
@@ -101,14 +109,11 @@ function tableFor(resources, availabilityById) {
   return `<table width="100%">
   <thead>
     <tr>
-      <th width="18%">资源</th>
-      <th width="27%">简介</th>
-      <th width="5%">多</th>
-      <th width="5%">快</th>
-      <th width="5%">净</th>
-      <th width="5%">稳</th>
-      <th width="8%">状&#8288;态</th>
-      <th width="15%">检&#8288;测</th>
+      <th width="20%">资源</th>
+      <th width="35%">简介</th>
+      <th width="15%">推荐指数</th>
+      <th width="12%">状&#8288;态</th>
+      <th width="18%">检&#8288;测</th>
     </tr>
   </thead>
   <tbody>
@@ -185,6 +190,19 @@ updatedReadme = replaceMarkedBlock(
   countBadge,
   1
 );
+
+const headerBadgesPattern =
+  /(?:\[!\[Website\]\(https:\/\/img\.shields\.io\/badge\/网站-zhuiju\.me-2563eb\?style=for-the-badge\)\]\(https:\/\/zhuiju\.me\)\r?\n<!-- resource-count:start -->[\s\S]*?<!-- resource-count:end -->\r?\n\[!\[Daily Check\]\(https:\/\/img\.shields\.io\/badge\/可用性检测-每日执行-f59e0b\?style=for-the-badge\)\]\(https:\/\/github\.com\/laoma2053\/awesome-zhuiju-free\/actions\/workflows\/check-availability\.yml\)|<p align="center">\r?\n  <a href="https:\/\/zhuiju\.me"><img src="https:\/\/img\.shields\.io\/badge\/网站-zhuiju\.me-2563eb\?style=for-the-badge" alt="网站 zhuiju\.me"><\/a>\r?\n  <!-- resource-count:start -->[\s\S]*?<!-- resource-count:end -->\r?\n  <a href="https:\/\/github\.com\/laoma2053\/awesome-zhuiju-free\/actions\/workflows\/check-availability\.yml"><img src="https:\/\/img\.shields\.io\/badge\/可用性检测-每日执行-f59e0b\?style=for-the-badge" alt="可用性检测 每日执行"><\/a>\r?\n<\/p>)/;
+const headerBadges = `<p align="center">
+  <a href="https://zhuiju.me"><img src="https://img.shields.io/badge/网站-zhuiju.me-2563eb?style=for-the-badge" alt="网站 zhuiju.me"></a>
+  ${countBadge}
+  <a href="https://github.com/laoma2053/awesome-zhuiju-free/actions/workflows/check-availability.yml"><img src="https://img.shields.io/badge/可用性检测-每日执行-f59e0b?style=for-the-badge" alt="可用性检测 每日执行"></a>
+</p>`;
+
+if (!headerBadgesPattern.test(updatedReadme)) {
+  throw new Error("README header badges block is missing or has an unexpected format.");
+}
+updatedReadme = updatedReadme.replace(headerBadgesPattern, headerBadges);
 
 if (updatedReadme !== readme) {
   await writeFile(readmePath, updatedReadme, "utf8");
