@@ -9,18 +9,25 @@
 3. 对值得继续验证的 Issue 评论：
 
    ```text
-   /approve-resource
+   ok
    ```
 
-4. GitHub Actions 自动创建一个候选资源草稿 PR。候选项默认：
+4. 如果明确不收录，评论：
+
+   ```text
+   no
+   ```
+
+   GitHub Actions 会自动回复并关闭 Issue。
+5. GitHub Actions 自动创建一个候选资源草稿 PR。候选项默认：
    - 状态为 `pending`
    - 评分全部为 `3.0`
    - 风险全部为 `unknown`
    - `featured` 为 `false`
-5. 管理员在 PR 中完成验证并修改真实数据。
-6. 合并 PR 后，资源进入正式数据库；自动任务会更新 README、检测精选资源可用性并提交结果。
+6. 管理员在 PR 中完成验证并修改真实数据。
+7. 合并 PR 后，资源进入正式数据库；自动任务会更新 README、检测精选资源可用性并提交结果。
 
-只有拥有仓库 `write`、`maintain` 或 `admin` 权限的人可以执行 `/approve-resource`。不要把该权限授予普通提交者。
+只有拥有仓库 `write`、`maintain` 或 `admin` 权限的人可以执行 `ok` / `no`。不要把该权限授予普通提交者。旧命令 `/approve-resource` 仍然可用。
 
 ## 合并候选 PR 前检查
 
@@ -37,7 +44,8 @@
 
 | 事件 | 自动结果 |
 | --- | --- |
-| 管理员在资源 Issue 评论 `/approve-resource` | 创建候选资源草稿 PR |
+| 管理员在资源 Issue 评论 `ok` | 创建候选资源草稿 PR |
+| 管理员在资源 Issue 评论 `no` | 回复并关闭 Issue |
 | 候选 PR 合并到 `main` | 更新正式数据库 |
 | `resources/resources.json` 发生变化 | 根据精选资源重新生成 README，并执行可用性检测 |
 | 每天北京时间约 09:00 | 检测精选资源主页状态，更新 README 和 `reports/availability.json` |

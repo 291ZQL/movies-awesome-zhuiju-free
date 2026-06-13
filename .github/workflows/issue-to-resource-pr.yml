@@ -12,9 +12,7 @@ permissions:
 
 jobs:
   create-candidate-pr:
-    if: >-
-      github.event.issue.pull_request == null &&
-      startsWith(github.event.comment.body, '/approve-resource')
+    if: github.event.issue.pull_request == null
     runs-on: ubuntu-latest
     steps:
       - name: Create candidate resource pull request
@@ -25,6 +23,16 @@ jobs:
             const repo = context.repo.repo;
             const issueNumber = context.issue.number;
             const actor = context.actor;
+            const command = (context.payload.comment?.body ?? "").trim().toLowerCase();
+            const approveCommands = new Set(["ok", "/ok", "approve", "/approve", "/approve-resource"]);
+            const rejectCommands = new Set(["no", "/no", "reject", "/reject"]);
+            const isApprove = approveCommands.has(command);
+            const isReject = rejectCommands.has(command);
+
+            if (!isApprove && !isReject) {
+              core.info("No resource review command found. Use `ok` to approve or `no` to reject.");
+              return;
+            }
 
             const permissionResponse =
               await github.rest.repos.getCollaboratorPermissionLevel({
@@ -35,6 +43,23 @@ jobs:
             const permission = permissionResponse.data.permission;
             if (!["admin", "maintain", "write"].includes(permission)) {
               core.setFailed("Only repository maintainers can approve resource issues.");
+              return;
+            }
+
+            if (isReject) {
+              await github.rest.issues.createComment({
+                owner,
+                repo,
+                issue_number: issueNumber,
+                body: "已标记为不收录。如后续信息变化，可以重新提交推荐。"
+              });
+              await github.rest.issues.update({
+                owner,
+                repo,
+                issue_number: issueNumber,
+                state: "closed",
+                state_reason: "not_planned"
+              });
               return;
             }
 
@@ -214,39 +239,74 @@ jobs:
                 ref: `refs/heads/${branch}`,
                 sha: baseRef.data.object.sha
               });
-              await github.rest.repos.createOrUpdateFileContents({
+            } else {
+              await github.rest.git.updateRef({
                 owner,
                 repo,
-                path: "resources/resources.json",
-                branch,
-                sha: file.sha,
-                message: `feat: add candidate resource ${name}`,
-                content: Buffer.from(
-                  `${JSON.stringify(resourcesData, null, 2)}\n`,
-                  "utf8"
-                ).toString("base64")
+                ref: `heads/${branch}`,
+                sha: baseRef.data.object.sha,
+                force: true
               });
             }
-
-            const pullRequest = await github.rest.pulls.create({
+            await github.rest.repos.createOrUpdateFileContents({
               owner,
               repo,
-              head: branch,
-              base: defaultBranch,
-              title: `[候选资源] ${name}`,
-              body: [
-                `由 #${issueNumber} 自动生成。`,
-                "",
-                "合并前请维护者完成以下检查：",
-                "- 验证主页与核心功能",
-                "- 调整评分、风险、地区与登录要求",
-                "- 决定是否将 `featured` 改为 `true`",
-                "- 确认描述中立且没有单部影视作品链接",
-                "",
-                `Closes #${issueNumber}`
-              ].join("\n"),
-              draft: true
+              path: "resources/resources.json",
+              branch,
+              sha: file.sha,
+              message: `feat: add candidate resource ${name}`,
+              content: Buffer.from(
+                `${JSON.stringify(resourcesData, null, 2)}\n`,
+                "utf8"
+              ).toString("base64")
             });
+
+            const pullRequestBody = [
+              `由 #${issueNumber} 自动生成。`,
+              "",
+              "合并前请维护者完成以下检查：",
+              "- 验证主页与核心功能",
+              "- 调整评分、风险、地区与登录要求",
+              "- 决定是否将 `featured` 改为 `true`",
+              "- 确认描述中立且没有单部影视作品链接",
+              "",
+              `Closes #${issueNumber}`
+            ].join("\n");
+
+            let pullRequest;
+            try {
+              pullRequest = await github.rest.pulls.create({
+                owner,
+                repo,
+                head: branch,
+                base: defaultBranch,
+                title: `[候选资源] ${name}`,
+                body: pullRequestBody,
+                draft: true
+              });
+            } catch (error) {
+              const manualUrl =
+                `https://github.com/${owner}/${repo}/compare/${defaultBranch}...${branch}?expand=1`;
+              if (
+                error.status === 403 &&
+                String(error.message).includes(
+                  "GitHub Actions is not permitted to create or approve pull requests"
+                )
+              ) {
+                core.setFailed(
+                  [
+                    "候选资源分支已创建，但仓库设置禁止 GitHub Actions 创建 Pull Request。",
+                    "",
+                    "请在仓库设置中开启：",
+                    "Settings → Actions → General → Workflow permissions → Allow GitHub Actions to create and approve pull requests",
+                    "",
+                    `也可以手动打开这个链接创建 PR：${manualUrl}`
+                  ].join("\n")
+                );
+                return;
+              }
+              throw error;
+            }
 
             await github.rest.issues.createComment({
               owner,
