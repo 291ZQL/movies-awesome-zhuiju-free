@@ -8,7 +8,7 @@ Awesome Zhuiju Free 是一个持续验证的免费追剧资源导航与影视工
 
 [![Website](https://img.shields.io/badge/网站-zhuiju.me-2563eb?style=for-the-badge)](https://zhuiju.me)
 <!-- resource-count:start -->
-<a href="resources/resources.json"><img src="https://img.shields.io/badge/已收录-7_个资源-0f766e?style=for-the-badge" alt="已收录 7 个资源"></a>
+<a href="resources/resources.json"><img src="https://img.shields.io/badge/已收录-8_个资源-0f766e?style=for-the-badge" alt="已收录 8 个资源"></a>
 <!-- resource-count:end -->
 [![Daily Check](https://img.shields.io/badge/可用性检测-每日执行-f59e0b?style=for-the-badge)](https://github.com/laoma2053/awesome-zhuiju-free/actions/workflows/check-availability.yml)
 

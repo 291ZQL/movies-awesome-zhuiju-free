@@ -1,7 +1,7 @@
 {
   "$schema": "./schema.json",
   "version": 1,
-  "updated_at": "2026-06-06",
+  "updated_at": "2026-06-13",
   "resources": [
     {
       "id": "cctv-tv",
@@ -268,6 +268,43 @@
         "added_at": "2026-06-06"
       },
       "featured": true
+    },
+    {
+      "id": "kuake-so-1",
+      "name": "夸克点搜",
+      "url": "https://www.kuake.so/",
+      "category": "cloud_search",
+      "summary": "夸克点搜是一个免费的夸克网盘资源搜索平台，通过聚合互联网上公开分享的夸克网盘资源链接，为用户提供快速、精准的搜索服务。",
+      "tags": [],
+      "access": {
+        "requires_login": false,
+        "free_level": "unknown",
+        "regions": ["GLOBAL"]
+      },
+      "scores": {
+        "more": 3.0,
+        "speed": 3.0,
+        "clean": 3.0,
+        "stable": 3.0,
+        "ease": 3.0
+      },
+      "risks": {
+        "copyright": "unknown",
+        "safety": "unknown",
+        "privacy": "unknown",
+        "payment": "unknown"
+      },
+      "verification": {
+        "status": "pending",
+        "last_checked": "2026-06-06",
+        "method": "manual",
+        "notes": "候选资源，等待维护者验证。提交者风险说明：无广告"
+      },
+      "source": {
+        "submitted_by": "@laoma2053",
+        "added_at": "2026-06-06"
+      },
+      "featured": false
     }
   ]
 }
