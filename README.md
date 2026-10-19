@@ -568,43 +568,43 @@ _等待首条通过验证的精选资源。你可以 [推荐一个资源](https:
     <tr>
       <td nowrap><a href="https://github.com/mtvpls/MoonTVPlus" target="_blank" rel="noopener noreferrer">MoonTVPlus</a></td>
       <td nowrap>MoonTV 增强版影视聚合播放器</td>
-      <td align="center" nowrap>3,426</td>
+      <td align="center" nowrap>3,508</td>
       <td align="center" nowrap>2026-10-05</td>
     </tr>
     <tr>
       <td nowrap><a href="https://github.com/Hiram-Wong/zyfun" target="_blank" rel="noopener noreferrer">zyfun</a></td>
       <td nowrap>跨平台桌面端视频资源播放器</td>
-      <td align="center" nowrap>9,006</td>
+      <td align="center" nowrap>9,049</td>
       <td align="center" nowrap>2026-06-25</td>
     </tr>
     <tr>
       <td nowrap><a href="https://github.com/Guovin/iptv-api" target="_blank" rel="noopener noreferrer">iptv-api</a></td>
       <td nowrap>IPTV 直播源自动采集筛选更新平台</td>
-      <td align="center" nowrap>25,531</td>
-      <td align="center" nowrap>2026-10-12</td>
+      <td align="center" nowrap>25,640</td>
+      <td align="center" nowrap>2026-10-14</td>
     </tr>
     <tr>
       <td nowrap><a href="https://github.com/iptv-org/iptv" target="_blank" rel="noopener noreferrer">iptv</a></td>
       <td nowrap>全球公开 IPTV 频道集合</td>
-      <td align="center" nowrap>140,597</td>
-      <td align="center" nowrap>2026-10-12</td>
+      <td align="center" nowrap>141,392</td>
+      <td align="center" nowrap>2026-10-19</td>
     </tr>
     <tr>
       <td nowrap><a href="https://github.com/fish2018/pansou" target="_blank" rel="noopener noreferrer">pansou</a></td>
       <td nowrap>高性能网盘资源搜索 API 服务</td>
-      <td align="center" nowrap>14,880</td>
+      <td align="center" nowrap>14,953</td>
       <td align="center" nowrap>2026-10-12</td>
     </tr>
     <tr>
       <td nowrap><a href="https://github.com/jiangrui1994/CloudSaver" target="_blank" rel="noopener noreferrer">CloudSaver</a></td>
       <td nowrap>网盘资源搜索与转存工具</td>
-      <td align="center" nowrap>9,368</td>
-      <td align="center" nowrap>2026-04-20</td>
+      <td align="center" nowrap>9,380</td>
+      <td align="center" nowrap>2026-10-15</td>
     </tr>
     <tr>
       <td nowrap><a href="https://github.com/Cp0204/quark-auto-save" target="_blank" rel="noopener noreferrer">quark-auto-save</a></td>
       <td nowrap>夸克网盘自动签到转存整理工具</td>
-      <td align="center" nowrap>3,065</td>
+      <td align="center" nowrap>3,067</td>
       <td align="center" nowrap>2026-07-09</td>
     </tr>
   </tbody>
